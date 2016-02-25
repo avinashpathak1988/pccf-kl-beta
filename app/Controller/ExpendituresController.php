@@ -150,6 +150,7 @@ class ExpendituresController extends AppController {
         $start_date     = '';
         $end_date       = '';
         $voucher_status = '';
+        $exp_status     = '';
         $condition      = array();
         if($this->Session->read('usertype_id') == Configure::read('ROUSERTTYPE')){
             $condition += array('Expenditure.user_id'    => $this->Session->read('user_id'));
@@ -158,6 +159,17 @@ class ExpendituresController extends AppController {
         }else if($this->Session->read('usertype_id') == Configure::read('ACCOUNTANTUSERTTYPE')){
             $condition += array('ViewDfoRo.accountant_id'    => $this->Session->read('id'));
         }   
+        if($this->Session->read('usertype_id') != Configure::read('ROUSERTTYPE')){
+            $condition          += array('Expenditure.is_final_submit' => 'Y');
+        }
+        if(isset($this->params['named']['exp_status']) && $this->params['named']['exp_status'] != ''){
+            $exp_status = $this->params['named']['exp_status'];
+            if($this->Session->read('usertype_id') == Configure::read('ROUSERTTYPE')){
+                $condition          += array('Expenditure.is_final_submit' => $exp_status);
+            }else{
+                $condition          += array('Expenditure.is_accountant_proceed' => $exp_status);
+            }
+        }
         if(isset($this->params['named']['ro_id']) && (int)$this->params['named']['ro_id'] != 0){
             $ro_id   = $this->params['named']['ro_id'];
             $condition          += array('Expenditure.user_id' => $ro_id);
@@ -233,7 +245,8 @@ class ExpendituresController extends AppController {
             'end_date'          => $end_date, 
             'voucher_status'    => $voucher_status, 
         	'fyear'				=> $fyear,
-    		'account_id'		=> $account_id,            
+    		'account_id'		=> $account_id, 
+            'exp_status'        => $exp_status,           
         ));    	
     } 
     /**
@@ -371,5 +384,48 @@ class ExpendituresController extends AppController {
         }else{
             echo 'FAIL';
         }     	
-    }          
+    }
+    public function expenditureFinalSubmit(){
+        $this->autoRender = false;
+        if(isset($this->data['id']) && (int)$this->data['id'] != 0){
+            $this->loadModel('Expenditure');
+            $curDate = date('Y-m-d H:i:s');
+            $fields = array(
+                'Expenditure.is_final_submit'   => "'Y'",
+                'Expenditure.final_submit_date' => "'$curDate'",
+            );
+            $condition = array(
+                'Expenditure.id'    => $this->data['id'],
+            );
+            if($this->Expenditure->updateAll($fields,$condition)){
+                echo 'SUCC';
+            }else{
+                echo 'FAIL';
+            }
+        }else{
+            echo 'FAIL';
+        }
+    }  
+    public function accountantProceed(){
+        $this->autoRender = false;
+        if(isset($this->data['id']) && (int)$this->data['id'] != 0){
+            $this->loadModel('Expenditure');
+            $curDate = date('Y-m-d H:i:s');
+            $fields = array(
+                'Expenditure.is_accountant_proceed'   => "'Y'",
+                'Expenditure.accountant_proceed_date' => "'$curDate'",
+                'Expenditure.accountant_proceed_by'   => $this->Session->read('id'),
+            );
+            $condition = array(
+                'Expenditure.id'    => $this->data['id'],
+            );
+            if($this->Expenditure->updateAll($fields,$condition)){
+                echo 'SUCC';
+            }else{
+                echo 'FAIL';
+            }
+        }else{
+            echo 'FAIL';
+        }        
+    }        
 }
