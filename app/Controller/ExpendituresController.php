@@ -385,6 +385,27 @@ class ExpendituresController extends AppController {
             echo 'FAIL';
         }     	
     }
+    public function accountantProceed(){
+        $this->autoRender = false;
+        if(isset($this->data['id']) && (int)$this->data['id'] != 0){
+            $this->loadModel('Expenditure');
+            $curDate = date('Y-m-d H:i:s');
+            $fields = array(
+                'Expenditure.is_accountant_proceed'   => "'Y'",
+                'Expenditure.accountant_proceed_by'   => $this->Session->read('id'),
+            );
+            $condition = array(
+                'Expenditure.id'    => $this->data['id'],
+            );
+            if($this->Expenditure->updateAll($fields,$condition)){
+                echo 'SUCC';
+            }else{
+                echo 'FAIL';
+            }
+        }else{
+            echo 'FAIL';
+        }        
+    } 
     public function expenditureFinalSubmit(){
         $this->autoRender = false;
         if(isset($this->data['id']) && (int)$this->data['id'] != 0){
@@ -406,26 +427,5 @@ class ExpendituresController extends AppController {
             echo 'FAIL';
         }
     }  
-    public function accountantProceed(){
-        $this->autoRender = false;
-        if(isset($this->data['id']) && (int)$this->data['id'] != 0){
-            $this->loadModel('Expenditure');
-            $curDate = date('Y-m-d H:i:s');
-            $fields = array(
-                'Expenditure.is_accountant_proceed'   => "'Y'",
-                'Expenditure.accountant_proceed_date' => "'$curDate'",
-                'Expenditure.accountant_proceed_by'   => $this->Session->read('id'),
-            );
-            $condition = array(
-                'Expenditure.id'    => $this->data['id'],
-            );
-            if($this->Expenditure->updateAll($fields,$condition)){
-                echo 'SUCC';
-            }else{
-                echo 'FAIL';
-            }
-        }else{
-            echo 'FAIL';
-        }        
-    }        
+           
 }
