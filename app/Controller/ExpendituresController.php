@@ -425,7 +425,7 @@ class ExpendituresController extends AppController {
                 echo 'FAIL';
             }
         }else{
-            echo 'FAIL';
+            echo 'Subrata Kumar Rout';
         }        
     }        
 }
