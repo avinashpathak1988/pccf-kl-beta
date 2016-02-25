@@ -1,0 +1,25 @@
+body{
+	height: 100%;
+}
+.login-logo{
+	background: #294E1A;
+}
+.login-box, .register-box{
+	margin: 7% auto 0;
+}
+.login-page{
+	background: url(../img/loginBg.jpg) no-repeat!important;
+	background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+}
+.form-control{
+	width: 85%;
+}
+.table > thead > tr > th{
+	background: #367fa9;
+	color: #fff;
+}
+.table > thead > tr > th a{
+	color: #fff;
+}

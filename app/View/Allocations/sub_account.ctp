@@ -1,0 +1,1 @@
+<?php echo $this->Form->input('AllocationDetail.0.sub_account_id',array('label'=>false,'id'=>'sub_account_id','class'=>'form-control budget','div'=>false,'options'=>$subAccountList,'empty'=>'--Select--','onclick'=>'javascript: subheadTotalBal();','required'	=> true));?>

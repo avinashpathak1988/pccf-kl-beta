@@ -1,0 +1,1 @@
+<?php echo $this->Form->input('ro_id',array('type'=>'select','label'=>'Range Officer','id'=>'ro_id','options'=>$roList,'empty'=>'--All--','class'=>'form-control','div'=>false))?>
